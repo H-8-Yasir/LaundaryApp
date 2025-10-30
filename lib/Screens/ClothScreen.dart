@@ -76,19 +76,19 @@ class _ClothscreenState extends State<Clothscreen> {
                      SizedBox(height: 10),
                      selectedIndex==index ? Column(
                      children: [
-                    Customclothes(name: "Kandura", imagePath: "assets/images/kandura.png", number: 1),
-                    Customclothes(name: "Shirt", imagePath: "assets/images/shirt.png", number: 2),
-                    Customclothes(name: "Pant", imagePath: "assets/images/pant.png", number: 3),
-                    Customclothes(name: "Socks", imagePath: "assets/images/socks.png", number: 4),
-                    Customclothes(name: "Trouser", imagePath: "assets/images/trouser.png", number: 5),
+                    Customclothes(name: "Kandura", imagePath: "assets/images/kandura.png"),
+                    Customclothes(name: "Shirt", imagePath: "assets/images/shirt.png"),
+                    Customclothes(name: "Pant", imagePath: "assets/images/pant.png"),
+                    Customclothes(name: "Socks", imagePath: "assets/images/socks.png"),
+                    Customclothes(name: "Trouser", imagePath: "assets/images/trouser.png"),
                      ],
                     ) : Column(
                      children: [
-                    Customclothes(name: "Abaya", imagePath: "assets/images/abaya.png", number: 1),
-                    Customclothes(name: "Hijab", imagePath: "assets/images/hijab.png", number: 2),
-                    Customclothes(name: "Kaftan", imagePath: "assets/images/kaftan.png", number: 3),
-                    Customclothes(name: "Skirt", imagePath: "assets/images/skirt.png", number: 4),
-                    Customclothes(name: "Trouser", imagePath: "assets/images/trouser.png", number: 5),
+                    Customclothes(name: "Abaya", imagePath: "assets/images/abaya.png"),
+                    Customclothes(name: "Hijab", imagePath: "assets/images/hijab.png"),
+                    Customclothes(name: "Kaftan", imagePath: "assets/images/kaftan.png"),
+                    Customclothes(name: "Skirt", imagePath: "assets/images/skirt.png"),
+                    Customclothes(name: "Trouser", imagePath: "assets/images/trouser.png"),
                      ],
                     ),
                     Padding(

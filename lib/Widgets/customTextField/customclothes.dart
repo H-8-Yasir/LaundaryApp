@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:laundaryapp/classes/cart_provider.dart';
+import 'package:laundaryapp/classes/garmentitem.dart';
+import 'package:provider/provider.dart';
 
-  class Customclothes extends StatefulWidget{
+  class Customclothes extends StatelessWidget{
     final String name;
     final String imagePath;
-    final double number;
 
-  const Customclothes({super.key,required this.name,required this.imagePath,required this.number});
-  @override
-  State<Customclothes> createState() => _CustomclothesState();
-}
-
-class _CustomclothesState extends State<Customclothes> {
+  const Customclothes({super.key,required this.name,required this.imagePath});
     Widget build(BuildContext context){
-      return Padding(
+
+      return Consumer<CartProvider>(
+        builder: (context, cartProvider, child){
+          final Garmentitem? item=cartProvider.items[name];
+          final int currentQuantity = item?.quantity ?? 0;
+
+          final void Function() increment= () => cartProvider.incrementQuantity(name);
+          final void Function() decrement= () => cartProvider.decrementQuantity(name);
+
+          return Padding(
         padding: const EdgeInsets.only(left: 20,right: 20,top:10),
         child: Container(
                     height: 55,
@@ -38,9 +44,9 @@ class _CustomclothesState extends State<Customclothes> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Image(image: AssetImage(widget.imagePath),width: 30,height: 30,),
+                                    Image(image: AssetImage(imagePath),width: 30,height: 30,),
                                     SizedBox(width: 5),
-                                    Text(widget.name,style: TextStyle(
+                                    Text(name,style: TextStyle(
                                       fontSize: 20
                                     ),),
                                       ],
@@ -48,31 +54,36 @@ class _CustomclothesState extends State<Customclothes> {
                               Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
+                                        InkWell(
+                                          onTap: decrement,
+                                       child:  Container(
                                       height:20,width:20,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(2),color: Color(0xFFD4AF37)
                                     ),
                                     child: Text("-",textAlign: TextAlign.center,style: TextStyle(
                                       color: Colors.white
-                                    ),),
-                                    ),
+                                    ))
+                                    )),
                                     SizedBox(width: 8),
                                     Container(height:20,width:20,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(2),color: Color(0xFFD4AF37)
                                     ),
-                                    child: Text(widget.number.toString(),textAlign: TextAlign.center,style: TextStyle(color: Colors.white)),),
+                                    child: Text("$currentQuantity",textAlign: TextAlign.center,style: TextStyle(color: Colors.white)),),
                                     SizedBox(width: 8),
-                                   Container(
-                                      height:20,width:20,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(2),color: Color(0xFFD4AF37)
-                                    ),
-                                    child: Text("+",textAlign: TextAlign.center,style: TextStyle(
-                                      color: Colors.white
-                                    ),),
-                                    )
+                                   InkWell(
+                                    onTap: increment,
+                                     child: Container(
+                                        height:20,width:20,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(2),color: Color(0xFFD4AF37)
+                                      ),
+                                      child: Text("+",textAlign: TextAlign.center,style: TextStyle(
+                                        color: Colors.white
+                                      ),),
+                                      ),
+                                   )
                                       ],
                                     )  
                                   ],
@@ -80,6 +91,8 @@ class _CustomclothesState extends State<Customclothes> {
                               ),
                             ),
                           ),
-      );
+               );
+            },
+      );     
     }
 }
