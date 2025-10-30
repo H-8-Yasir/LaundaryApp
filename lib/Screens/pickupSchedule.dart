@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:laundaryapp/Screens/ReviewScreen.dart';
 import 'package:laundaryapp/Screens/homescreen.dart';
-import 'package:laundaryapp/Screens/packagingScreen.dart';
 import 'package:laundaryapp/Screens/virtualAssistant.dart';
 import 'package:laundaryapp/Widgets/ElevatedButton.dart';
 import 'package:laundaryapp/Widgets/appBarCustom.dart';
