@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:laundaryapp/Screens/ReviewScreen.dart';
 import 'package:laundaryapp/Screens/homescreen.dart';
 import 'package:laundaryapp/Screens/packagingScreen.dart';
@@ -33,13 +34,13 @@ class Pickupschedule extends StatelessWidget{
               const Text("From pickup to doorstep delivery, here’s\n how Akoya makes it seamless.",textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12,fontWeight: FontWeight.w500)),
               SizedBox(height: 8),
-              cards(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
+              card(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
               image: Image(image: AssetImage("assets/images/location.png"))),
-              cards(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
+              card(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
               image: Image(image: AssetImage("assets/images/shirt2.png"))),
-              cards(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
+              card(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
               image: Image(image: AssetImage("assets/images/drops.png"))),
-              cards(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
+              card(maintext: "Shedule Pickup", text: "Choose time & location \nthat suits you.", 
               image: Image(image: AssetImage("assets/images/home.png"))),
               Padding(
                 padding: const EdgeInsets.only(left: 25,right: 25,top: 28),
@@ -52,3 +53,47 @@ class Pickupschedule extends StatelessWidget{
     );
   }
 }
+
+  Widget card({
+    required String maintext,
+    required String text,
+    required Image image,
+   }){
+    return Padding(
+      padding: const EdgeInsets.only(left: 25,right: 25,top: 6),
+      child: Card(
+        elevation: 4,
+        clipBehavior: Clip.antiAlias,
+        shadowColor: Colors.grey,
+        child: Container(
+          width: double.infinity,
+          height: 97,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: image,
+              ),
+              Gap(20),
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(maintext,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500,),),
+                    Text(text,style: TextStyle(fontSize: 12),)
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+   }

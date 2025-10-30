@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:laundaryapp/helpers/summary_item_row.dart';
 import 'package:laundaryapp/Widgets/appBarCustom.dart';
 import 'package:laundaryapp/classes/cart_provider.dart';
+import 'package:laundaryapp/helpers/summary_static_row.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,7 +22,8 @@ class Ordersummaryscreen extends StatelessWidget{
   }
   Widget build(BuildContext context){
 
-    final cartProvider= Provider.of<CartProvider>(context);
+    //final cartProvider= Provider.of<CartProvider>(context);
+    final  cartProvider= context.watch<CartProvider>();
     return Scaffold(
       backgroundColor: Color(0xFFF7F3EE),
       body: SafeArea(
@@ -51,6 +53,13 @@ class Ordersummaryscreen extends StatelessWidget{
                   return SummaryItemRow(item: item);
                 },
               ),
+            ),
+            if(cartProvider.selectedPackaging != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 20,right: 20,top: 10),
+              child: SummaryStaticRow(label: "Packaging", 
+              value: cartProvider.selectedPackaging!.name, 
+              imagePath: cartProvider.selectedPackaging!.imagePath),
             ),
         
             Divider(),

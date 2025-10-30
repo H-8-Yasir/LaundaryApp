@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:laundaryapp/classes/garmentitem.dart';
+import 'package:laundaryapp/classes/packaging_option.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class CartProvider extends ChangeNotifier{
+  // packaging state
+  PackagingOption? _selectedPackaging;
+  PackagingOption? get selectedPackaging => _selectedPackaging;
+
+  final List<PackagingOption> availablePackagingOptions = const [
+    PackagingOption(name: "Plastic Wrap", 
+    description: "Clean and simple wrap,\ntransparent protection.", imagePath: "assets/images/plastic.png", price: 10),
+    PackagingOption(name: "Luxury Fabric Wrap", 
+    description: "Hidden, soft-touch \nwrapping with luxurious\ntexture.", imagePath: "assets/images/luxury.png", price: 30),
+    PackagingOption(name: "Premium Box", 
+    description: "Elegant gift box with\nmagnetic closure and\nscent-preserving lining.", imagePath: "assets/images/premiumbox.png", price: 40)
+  ];
+
+  void setSelectedPackaging(PackagingOption option){
+    _selectedPackaging = option;
+    notifyListeners();
+  }
+  // for garments
   final Map<String, Garmentitem> _items = {};
 
   CartProvider(){

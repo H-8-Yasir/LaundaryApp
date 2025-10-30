@@ -6,7 +6,16 @@
                child: Row( 
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                       Text(text,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),)
+                       SelectableText(text,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+                       showCursor: true,
+         cursorColor: Colors.red,
+  cursorWidth: 2,
+  cursorRadius: Radius.circular(2),
+  toolbarOptions: ToolbarOptions(
+    copy: true,
+    cut: true,
+    paste: true,
+    selectAll: true,))
                     ],
                   ),
     );

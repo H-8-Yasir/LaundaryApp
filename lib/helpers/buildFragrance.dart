@@ -70,8 +70,8 @@ class _Buildfragrancestate extends State<Buildfragrance>{
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Image(image: AssetImage("assets/images/picture4.png"),width: 40,height: 40,),
+                padding: const EdgeInsets.all(10),
+                child: Image(image: AssetImage("assets/images/picture4.png"),fit: BoxFit.fill),
               ),
               Column(
                 children: [
