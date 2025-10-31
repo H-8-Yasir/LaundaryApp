@@ -4,6 +4,7 @@ import 'package:laundaryapp/Widgets/customTextField/customTextField.dart';
 import 'package:laundaryapp/Widgets/customTextField/customtext.dart';
 import 'package:laundaryapp/Widgets/custom_sub_text.dart';
 import 'package:laundaryapp/bar/bottomBar.dart';
+import 'package:laundaryapp/services/auth_services.dart';
 
 class Signupscreen extends StatefulWidget{
   @override
@@ -16,6 +17,75 @@ class _SignupscreenState extends State<Signupscreen> {
   final TextEditingController email=TextEditingController();
   final TextEditingController password=TextEditingController();
   final TextEditingController confirmPassword=TextEditingController();
+  final AuthService _authService = AuthService();
+  bool _isLoading = false;
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  void _navigateToHome() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => BottomBar()),
+    );
+  }
+
+  // --- 1. Email/Password Sign Up ---
+  Future<void> _handleSignUp() async {
+    if (email.text.isEmpty || password.text.isEmpty) return;
+
+    setState(() { _isLoading = true; });
+
+    try {
+      final user = await _authService.signUpWithEmailPassword(
+        email.text.trim(),
+        password.text.trim(),
+      );
+      
+      if (user != null) {
+        // Sign-up successful. Show verification message.
+        _showError('Verification email sent to ${user.email}');
+        // NOTE: You typically don't navigate until the email is verified, 
+        // but for demo purposes, we navigate immediately.
+        _navigateToHome(); // ⬅️ NAVIGATION ON SUCCESS
+      }
+    } catch (e) {
+      _showError(e.toString().replaceAll('Exception: ', ''));
+    } finally {
+      setState(() { _isLoading = false; });
+    }
+  }
+
+  // --- 2. Google Sign In ---
+  Future<void> _handleGoogleSignIn() async {
+    setState(() { _isLoading = true; });
+
+    try {
+      final user = await _authService.signInWithGoogle();
+
+      if (user != null) {
+        _showError('Signed in with Google as ${user.displayName ?? user.email}');
+        _navigateToHome(); // ⬅️ NAVIGATION ON SUCCESS
+      } else {
+        // User cancelled sign-in
+        _showError('Google sign in cancelled.');
+      }
+    } catch (e) {
+      _showError(e.toString().replaceAll('Exception: ', ''));
+    } finally {
+      setState(() { _isLoading = false; });
+    }
+  }
+
+  @override
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }  
+
   Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: Color(0xFFF7F3EE),
@@ -78,7 +148,15 @@ class _SignupscreenState extends State<Signupscreen> {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(left: 20,right: 20,bottom: 10,top: 10),
-                child: elevatedButton(text: "Sign Up",page: BottomBar()),
+                child: _isLoading ? CircularProgressIndicator() : ElevatedButton(onPressed: _handleSignUp, 
+                style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD4AF37),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24)
+                      )
+                    ),
+                child: Text('Sign Up',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,
+                    fontSize: 16)))
               ),
               const SizedBox(height: 15),
               Row(
@@ -95,9 +173,12 @@ class _SignupscreenState extends State<Signupscreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ClipOval(
-                    child: Image.asset('assets/images/download.png',height: 50,width: 50,fit: BoxFit.cover),
-                    ),
+                  _isLoading ? CircularProgressIndicator() : InkWell(
+                    onTap: _handleGoogleSignIn,
+                    child: ClipOval(
+                      child: Image.asset('assets/images/download.png',height: 50,width: 50,fit: BoxFit.cover),
+                      ),
+                  ),
                     const SizedBox(width: 32),
                   ClipOval(
                     child: Image.asset('assets/images/facebook.png',height: 50,width: 50,fit: BoxFit.cover),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "289721586331",
+    "project_id": "laundaryapp-d4295",
+    "storage_bucket": "laundaryapp-d4295.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289721586331:android:5f5d3d1becab92ecc9ec3e",
+        "android_client_info": {
+          "package_name": "com.example.laundaryapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAA0AKZwbh-cpAEjHTIfVL8w6Y-JWs0aY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
