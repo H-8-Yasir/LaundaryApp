@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:laundaryapp/Widgets/ElevatedButton.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:laundaryapp/Widgets/customTextField/customTextField.dart';
 import 'package:laundaryapp/Widgets/customTextField/customtext.dart';
 import 'package:laundaryapp/Widgets/custom_sub_text.dart';
@@ -19,6 +20,10 @@ class _SignupscreenState extends State<Signupscreen> {
   final TextEditingController confirmPassword=TextEditingController();
   final AuthService _authService = AuthService();
   bool _isLoading = false;
+  bool _isLoading1 = false;
+  bool _isLoading2 = false;
+  final AuthService _facebookService = AuthService();
+  User? _user;
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -60,7 +65,7 @@ class _SignupscreenState extends State<Signupscreen> {
 
   // --- 2. Google Sign In ---
   Future<void> _handleGoogleSignIn() async {
-    setState(() { _isLoading = true; });
+    setState(() { _isLoading1 = true; });
 
     try {
       final user = await _authService.signInWithGoogle();
@@ -75,9 +80,48 @@ class _SignupscreenState extends State<Signupscreen> {
     } catch (e) {
       _showError(e.toString().replaceAll('Exception: ', ''));
     } finally {
-      setState(() { _isLoading = false; });
+      setState(() { _isLoading1 = false; });
     }
   }
+
+  Future<void> handleFacebookLogin() async {
+    setState((){ _isLoading2 = true;});
+
+     try {
+    // 1️⃣ Trigger Facebook sign-in flow
+    final LoginResult result = await FacebookAuth.instance.login();
+
+    // 2️⃣ Check login status
+    if (result.status == LoginStatus.success) {
+      // 3️⃣ Get credential from Facebook access token
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(result.accessToken!.token);
+
+      // 4️⃣ Sign in to Firebase with that credential
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final user = userCredential.user;
+
+      if (user != null) {
+        // ✅ Successfully signed in — navigate to home
+        _showError('Signed in with Facebook as ${user.displayName ?? user.email}');
+        _navigateToHome();
+      } else {
+        _showError('Facebook sign-in failed.');
+      }
+    } else if (result.status == LoginStatus.cancelled) {
+      _showError('Facebook sign-in cancelled.');
+    } else {
+      _showError('Facebook sign-in error: ${result.message}');
+    }
+  } catch (e) {
+    _showError(e.toString().replaceAll('Exception: ', ''));
+  } finally {
+    setState(() { _isLoading2 = false; });
+  }
+  }
+
 
   @override
   void dispose() {
@@ -173,16 +217,19 @@ class _SignupscreenState extends State<Signupscreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _isLoading ? CircularProgressIndicator() : InkWell(
+                  _isLoading1 ? CircularProgressIndicator() : InkWell(
                     onTap: _handleGoogleSignIn,
                     child: ClipOval(
                       child: Image.asset('assets/images/download.png',height: 50,width: 50,fit: BoxFit.cover),
                       ),
                   ),
                     const SizedBox(width: 32),
-                  ClipOval(
-                    child: Image.asset('assets/images/facebook.png',height: 50,width: 50,fit: BoxFit.cover),
-                    )
+                  _isLoading2 ? CircularProgressIndicator() : InkWell(
+                    onTap: handleFacebookLogin,
+                    child: ClipOval(
+                      child: Image.asset('assets/images/facebook.png',height: 50,width: 50,fit: BoxFit.cover),
+                      ),
+                  )
                 ],
               ),
               const SizedBox(height: 20),

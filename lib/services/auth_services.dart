@@ -1,12 +1,13 @@
-// lib/services/auth_service.dart
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FacebookAuth facebook=FacebookAuth.instance;
+  bool isLoggedIn = false;
+  User? user;
    
-
-  // --- 1. Email/Password Sign Up ---
   Future<User?> signUpWithEmailPassword(String email, String password) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
@@ -32,7 +33,7 @@ class AuthService {
  Future<User?> signInWithGoogle() async {
   
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         // User cancelled the sign-in
         return null;
@@ -41,7 +42,8 @@ class AuthService {
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       
       final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,      
+        idToken: googleAuth.idToken,  
+        accessToken: googleAuth.accessToken    
       );
 
       final userCredential = await _auth.signInWithCredential(credential);
@@ -54,6 +56,28 @@ class AuthService {
     } catch (e) {
      
       throw Exception('An unknown error occurred during Google sign in: $e');
+    }
+  }
+
+  Future<User?> signInWithFacebook() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success) {
+        final OAuthCredential credential =
+            FacebookAuthProvider.credential(result.accessToken!.token);
+
+        final userCredential =
+            await _auth.signInWithCredential(credential);
+
+        return userCredential.user;
+      } else {
+        print("Facebook Login Failed: ${result.message}");
+        return null;
+      }
+    } catch (e) {
+      throw Exception("Error: $e");
+      
     }
   }
 }
